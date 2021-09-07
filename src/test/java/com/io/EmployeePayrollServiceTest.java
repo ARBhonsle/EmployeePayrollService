@@ -1,7 +1,5 @@
 package com.io;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
@@ -17,8 +14,8 @@ import java.util.stream.IntStream;
  */
 public class EmployeePayrollServiceTest
 {
-    private static String HOME = System.getProperty("user.home");
-    private static String PLAY_PATH = "TempPlay";
+    private static final String HOME = System.getProperty("user.home");
+    private static final String PLAY_PATH = "TempPlay";
 
     @Test
     public void givenPathWhenCheckedShouldConfirmIfExist() throws IOException {
@@ -53,5 +50,14 @@ public class EmployeePayrollServiceTest
         Files.list(playPath).filter(Files::isRegularFile).forEach(System.out:: println);
         Files.newDirectoryStream(playPath).forEach(System.out::println);
         Files.newDirectoryStream(playPath,path->path.toFile().isFile() && path.toString().startsWith("temp")).forEach(System.out::println);
+    }
+
+    @Test
+    public void givenDirectoryWhenWatchedListAllActivities() throws IOException {
+        Path dir = Paths.get(HOME+"/"+PLAY_PATH);
+        Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
+        long numOfEntries = Files.list(dir).filter(Files::isRegularFile).count();
+        System.out.println("Number of file Entries: "+numOfEntries);
+        new JavaWatchService(dir).processEvents();
     }
 }
